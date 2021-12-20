@@ -5,10 +5,10 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import PeopleIcon from '@mui/icons-material/People';
-import BarChartIcon from '@mui/icons-material/BarChart';
+import ApartmentIcon from '@mui/icons-material/Apartment';
 import LayersIcon from '@mui/icons-material/Layers';
+import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
 
 export const mainListItems = (
   <div>
@@ -22,7 +22,7 @@ export const mainListItems = (
     </ListItem>
     <ListItem button>
       <ListItemIcon>
-        <ShoppingCartIcon />
+        <LocalHospitalIcon />
       </ListItemIcon>
       <Link style={{ color: 'black', textDecoration: 'none' }} to="/beneficios">
         <ListItemText primary="Benefícios" />
@@ -30,18 +30,18 @@ export const mainListItems = (
     </ListItem>
     <ListItem button>
       <ListItemIcon>
-        <PeopleIcon />
+        <ApartmentIcon />
       </ListItemIcon>
-      <Link style={{ color: 'black', textDecoration: 'none' }} to="/">
+      <Link style={{ color: 'black', textDecoration: 'none' }} to="/clientes">
         <ListItemText primary="Clientes" />
       </Link>
     </ListItem>
     <ListItem button>
       <ListItemIcon>
-        <BarChartIcon />
+        <NoteAddIcon />
       </ListItemIcon>
       <Link style={{ color: 'black', textDecoration: 'none' }} to="/">
-        <ListItemText primary="Benefícios" />
+        <ListItemText primary="Ficha de cadastro" />
       </Link>
     </ListItem>
     <ListItem button>
@@ -49,7 +49,7 @@ export const mainListItems = (
         <LayersIcon />
       </ListItemIcon>
       <Link style={{ color: 'black', textDecoration: 'none' }} to="/">
-        <ListItemText primary="Benefícios" />
+        <ListItemText primary="Relatórios" />
       </Link>
     </ListItem>
   </div>

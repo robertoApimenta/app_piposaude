@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from "react-router-dom";
 import api from '../../config/api';
-import { useParams } from "react-router-dom";
 
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -19,10 +19,19 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { mainListItems } from '../listItems';
 
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+
+import Button from '@mui/material/Button';
+
 import TextField from '@mui/material/TextField';
 
 import Fab from '@mui/material/Fab';
-import SaveAsIcon from '@mui/icons-material/SaveAs';
+import AddIcon from '@mui/icons-material/Add';
 
 import Alert from '@mui/material/Alert';
 
@@ -74,67 +83,88 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const mdTheme = createTheme();
 
-const planos = [
-  {
-    value: '1',
-    label: 'Plano de Saúde',
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
   },
-  {
-    value: '2',
-    label: 'Plano Dentário',
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
   },
-];
+}));
 
-export const EditarBeneficio = (props) => {
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}));
+
+export default function DashboardClientes(prop) {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
-
-  const { id } = useParams();
 
   const [status, setStatus] = useState({
     tipo: '',
     mensagem: ''
   })
 
-  const [nome, setNome] = useState('')
-  const [categoria, setCategoria] = useState('');
+  const [clientes, setClientes] = useState([]);
 
-  const handleChange = (event) => {
-    setCategoria(event.target.value);
-  };
+  const [novoCliente, setNovoCliente] = useState({
+    razaoSocial: '',
+    cnpj: ''
+  })
+
+  const valorInput = e => setNovoCliente({ ...novoCliente, [e.target.name]: e.target.value })
 
   useEffect(() => {
-
-    const getBeneficio = async () => {
-      await api.get('/listarBeneficio/' + id).then((res) => {
-        setNome(res.data.nome)
-        setCategoria(res.data.categoria);
+    const getClientes = async () => {
+      await api.get('/listarClientes').then((res) => {
+        //console.log(res.data)
+        setClientes(res.data);
       }).catch((erro) => {
         console.log(erro);
       });
     }
 
-    getBeneficio();
-  }, [id]);
+    getClientes();
+  }, []);
 
-  const updateBeneficio = async e => {
+  const newCliente = async e => {
     e.preventDefault();
-    let data = { nome, categoria };
-    await api.put('/editarBeneficio/' + id, data).then((res) => {
-      //console.log(res.data.mensagem)
+    await api.post('/novoCliente', novoCliente).then((res) => {
       setStatus({
         tipo: 'sucess',
-        mensagem: res.data.mensagem
-      });
+        mensagem: 'Cliente cadastrado com sucesso.'
+      })
+      setTimeout(function () {
+        return window.location.reload();
+      }, 1000);
     }).catch(() => {
       setStatus({
-        tipo: 'erro',
-        mensagem: 'Erro ao editar benefício.'
-      });
+        tipo: 'error',
+        mensagem: 'Erro durante tentativa de cadastro.'
+      })
+    });
+  }
+
+  const deleteCliente = async (id) => {
+    //console.log(id)
+    await api.delete('/deletarCliente/' + id).then(() => {
+      setTimeout(function () {
+        return window.location.reload();
+      }, 300);
+    }).catch(() => {
+
     })
   }
+
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -226,40 +256,70 @@ export const EditarBeneficio = (props) => {
                         variant="outlined"
                         required
                         fullWidth
-                        id="nome"
-                        name="nome"
-                        value={nome}
-                        onChange={e => setNome(e.target.value)}
+                        id="razaoSocial"
+                        label="Razão Social da Empresa"
+                        name="razaoSocial"
+                        onChange={valorInput}
                       />
                     </Grid>
                     <Grid item xs={4} style={{ marginLeft: '15px' }}>
                       <TextField
-                        id="outlined-select-currency-native"
-                        select
-                        label="Tipo de plano"
+                        variant="outlined"
+                        required
                         fullWidth
-                        value={categoria}
-                        onChange={handleChange}
-                        SelectProps={{
-                          native: true,
-                        }}
-                      >
-                        {planos.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </TextField>
-                    </Grid>
+                        id="cnpj"
+                        label="CNPJ da empresa"
+                        name="cnpj"
+                        onChange={valorInput}
+                      />
+                    </Grid>                    
                     <Grid item xs={2} style={{ marginLeft: '15px' }}>
-                      <Fab onClick={updateBeneficio} color="primary" aria-label="add">
-                        <SaveAsIcon />
+                      <Fab color="primary" aria-label="add" onClick={newCliente}>
+                        <AddIcon />
                       </Fab>
                     </Grid>
                   </Grid>
                 </Paper>
               </Grid>
-
+              <Grid item xs={12} md={12} lg={12}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <TableContainer>
+                    <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                      <TableHead>
+                        <TableRow>
+                          <StyledTableCell>Benefício</StyledTableCell>
+                          <StyledTableCell align="center">Categoria</StyledTableCell>
+                          <StyledTableCell align="center">Opções</StyledTableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {clientes.map((row) => (
+                          <StyledTableRow key={row._id}>
+                            <StyledTableCell component="th" scope="row">
+                              {row.razaoSocial}
+                            </StyledTableCell>
+                            <StyledTableCell align="center">
+                              {row.cnpj}
+                            </StyledTableCell>
+                            <StyledTableCell align="center">
+                              <Link to={"/editarCliente/" + row._id} style={{ color: 'black', textDecoration: 'none' }}>
+                                <Button variant="contained">Editar</Button>{' '}
+                              </Link>
+                              <Button variant="contained" color="error" onClick={() => deleteCliente(row._id)}>Deletar</Button>{' '}
+                            </StyledTableCell>
+                          </StyledTableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Paper>
+              </Grid>
             </Grid>
           </Container>
         </Box>
