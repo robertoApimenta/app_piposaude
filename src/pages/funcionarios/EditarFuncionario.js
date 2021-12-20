@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
 import api from '../../config/api';
+import { useParams } from "react-router-dom";
 
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -19,6 +19,16 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { mainListItems } from '../listItems';
 
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+
+import Fab from '@mui/material/Fab';
+import SaveAsIcon from '@mui/icons-material/SaveAs';
+import AddIcon from '@mui/icons-material/Add';
+
+
+import Alert from '@mui/material/Alert';
+
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -27,13 +37,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
 import Button from '@mui/material/Button';
-
-import TextField from '@mui/material/TextField';
-
-import Fab from '@mui/material/Fab';
-import AddIcon from '@mui/icons-material/Add';
-
-import Alert from '@mui/material/Alert';
 
 const drawerWidth = 240;
 
@@ -103,86 +106,53 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const planos = [
-  {
-    value: '1',
-    label: 'Plano de Saúde',
-  },
-  {
-    value: '2',
-    label: 'Plano Dentário',
-  },
-];
 
-export default function DashboardBeneficios(prop) {
+
+export const EditarFuncionario = (props) => {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
+  const [beneficio, setBeneficio] = useState('')
+  const [beneficios, setBeneficios] = useState([])
+  const [beneficiosClientes, setBeneficiosClientes] = useState([])
+
+  const handleChange = (event) => {
+    setBeneficio(event.target.value);
+  };
+
+  const { id } = useParams();
+
+  const [funcionario, setFuncionario] = useState({
+    idEmpresa: '',
+    nome: '',
+    cpf: '',
+    email: ''
+  });
+
   const [status, setStatus] = useState({
     tipo: '',
     mensagem: ''
-  })
-
-  const [beneficios, setBeneficios] = useState([]);
-
-  const [nome, setNome] = useState('')
-
-  const [categoria, setCategoria] = useState('1');
-
-  const handleChange = (event) => {
-    setCategoria(event.target.value);
-  };
-
-  const valorInput = e => setNome({ ...nome, [e.target.name]: e.target.value })
+  });
 
   useEffect(() => {
-    const getBeneficios = async () => {
-      await api.get('/listarBeneficios').then((res) => {
-        //console.log(res.data)
-        setBeneficios(res.data);
-      }).catch((erro) => {
-        console.log(erro);
-      });
+    const get = async () => {
+      await api.get('/listarFuncionario/' + id).then((res) => {
+        setFuncionario(res.data.funcionario);
+        setBeneficios(res.data.beneficios);
+      })
     }
 
-    getBeneficios();
-  }, []);
+    get();
 
-  const novoBeneficio = async e => {
+  }, [id]);
+  console.log(beneficios)
+
+  const updateCliente = async e => {
     e.preventDefault();
-    var dados = {
-      nome: nome.nome,
-      categoria
-    }
-    await api.post('/novoBeneficio', dados).then((res) => {
-      setStatus({
-        tipo: 'sucess',
-        mensagem: 'Benefício cadastrado com sucesso.'
-      })
-      setTimeout(function () {
-        return window.location.reload();
-      }, 1000);
-    }).catch(() => {
-      setStatus({
-        tipo: 'error',
-        mensagem: 'Erro durante tentativa de cadastro.'
-      })
-    });
-  }
 
-  const deleteBeneficio = async (id) => {
-    //console.log(id)
-    await api.delete('/deletarBeneficio/' + id).then(() => {
-      setTimeout(function () {
-        return window.location.reload();
-      }, 300);
-    }).catch(() => {
-
-    })
-  }
-
+  };
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -269,84 +239,70 @@ export default function DashboardBeneficios(prop) {
                   }}
                 >
                   <Grid container>
-                    <Grid item xs={4}>
+                    <Grid item xs={3}>
                       <TextField
-                        variant="outlined"
                         required
+                        id="standard-basic"
+                        variant="standard"
                         fullWidth
-                        id="nome"
-                        label="Nome do plano/benefício"
                         name="nome"
-                        onChange={valorInput}
+                        value={funcionario.nome}
+                        onChange={e => setFuncionario(e.target.value)}
                       />
                     </Grid>
-                    <Grid item xs={4} style={{ marginLeft: '15px' }}>
+                    <Grid item xs={3} sx={{ ml: 1 }}>
                       <TextField
-                        id="outlined-select-currency-native"
-                        select
-                        label="Tipo de plano"
+                        required
+                        id="standard-basic"
+                        variant="standard"
                         fullWidth
-                        value={categoria}
-                        onChange={handleChange}
-                        SelectProps={{
-                          native: true,
-                        }}
-                      >
-                        {planos.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </TextField>
+                        name="cpf"
+                        value={funcionario.cpf}
+                        onChange={e => setFuncionario(e.target.value)}
+                      />
                     </Grid>
-                    <Grid item xs={2} style={{ marginLeft: '15px' }}>
-                      <Fab color="primary" aria-label="add" onClick={novoBeneficio}>
-                        <AddIcon />
+                    <Grid item xs={4} sx={{ ml: 1 }}>
+                      <TextField
+                        required
+                        id="standard-basic"
+                        variant="standard"
+                        fullWidth
+                        name="email"
+                        value={funcionario.email}
+                        onChange={e => setFuncionario(e.target.value)}
+                      />
+                    </Grid>
+                    <Grid item xs={1} style={{ marginLeft: '30px' }}>
+                      <Fab onClick={updateCliente} color="primary" aria-label="add">
+                        <SaveAsIcon />
                       </Fab>
                     </Grid>
                   </Grid>
                 </Paper>
               </Grid>
-              <Grid item xs={12} md={12} lg={12}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                  }}
-                >
-                  <TableContainer>
-                    <Table sx={{ minWidth: 700 }} aria-label="customized table">
-                      <TableHead>
-                        <TableRow>
-                          <StyledTableCell>Benefício</StyledTableCell>
-                          <StyledTableCell align="center">Categoria</StyledTableCell>
-                          <StyledTableCell align="center">Opções</StyledTableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {beneficios.map((row) => (
-                          <StyledTableRow key={row._id}>
-                            <StyledTableCell component="th" scope="row">
-                              {row.nome}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              {row.categoria === '1' ? "Plano de Saúde" : "Plano Dentário"}
-                            </StyledTableCell>
-                            <StyledTableCell align="center">
-                              <Link to={"/editarBeneficio/" + row._id} style={{ color: 'black', textDecoration: 'none' }}>
-                                <Button variant="contained" style={{backgroundColor: '#FFA500'}}>Editar</Button>{' '}
-                              </Link>
-                              <Button variant="contained" color="error" onClick={() => deleteBeneficio(row._id)}>Deletar</Button>{' '}
-                            </StyledTableCell>
-                          </StyledTableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </Paper>
+            </Grid>
+            <h3>Benefícios</h3>
+            <Grid item xs={12} md={12} lg={12}>
+              <Grid container>
+                <Grid item xs={4}>
+                  <TextField
+                    id="outlined-select-currency"
+                    fullWidth
+                    select
+                    label="Selecione o benefício"
+                    value={beneficio}
+                    onChange={handleChange}
+                  >
+                    {beneficios.map((option) => (
+                      <MenuItem key={option._id} value={option.idBeneficio}>
+                        {option.idBeneficio}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
               </Grid>
             </Grid>
+            { beneficio === 'Plano de Saúde Norte Europa' ? <h1>plano europa</h1> : "" }
           </Container>
         </Box>
       </Box>

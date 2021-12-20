@@ -272,7 +272,7 @@ export default function DashboardClientes(prop) {
                         name="cnpj"
                         onChange={valorInput}
                       />
-                    </Grid>                    
+                    </Grid>
                     <Grid item xs={2} style={{ marginLeft: '15px' }}>
                       <Fab color="primary" aria-label="add" onClick={newCliente}>
                         <AddIcon />
@@ -290,11 +290,11 @@ export default function DashboardClientes(prop) {
                   }}
                 >
                   <TableContainer>
-                    <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                    <Table aria-label="customized table">
                       <TableHead>
                         <TableRow>
-                          <StyledTableCell>Benefício</StyledTableCell>
-                          <StyledTableCell align="center">Categoria</StyledTableCell>
+                          <StyledTableCell>Cliente/Empresa</StyledTableCell>
+                          <StyledTableCell align="center">CNPJ</StyledTableCell>
                           <StyledTableCell align="center">Opções</StyledTableCell>
                         </TableRow>
                       </TableHead>
@@ -308,8 +308,11 @@ export default function DashboardClientes(prop) {
                               {row.cnpj}
                             </StyledTableCell>
                             <StyledTableCell align="center">
+                              <Link to={"/novoFuncionario/" + row._id} style={{ color: 'black', textDecoration: 'none' }}>
+                                <Button variant="contained">Add funcionário</Button>{' '}
+                              </Link>
                               <Link to={"/editarCliente/" + row._id} style={{ color: 'black', textDecoration: 'none' }}>
-                                <Button variant="contained">Editar</Button>{' '}
+                                <Button variant="contained" style={{ backgroundColor: '#FFA500' }}>Editar</Button>{' '}
                               </Link>
                               <Button variant="contained" color="error" onClick={() => deleteCliente(row._id)}>Deletar</Button>{' '}
                             </StyledTableCell>
