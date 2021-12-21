@@ -21,12 +21,12 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { mainListItems } from '../listItems';
 
 import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
 
 import Fab from '@mui/material/Fab';
-import SaveAsIcon from '@mui/icons-material/SaveAs';
 import AddIcon from '@mui/icons-material/Add';
-
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 
 import Alert from '@mui/material/Alert';
 
@@ -36,9 +36,6 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-
-import Button from '@mui/material/Button';
-import { Label } from '@mui/icons-material';
 
 const drawerWidth = 240;
 
@@ -152,8 +149,8 @@ export const NovoFuncionario = (props) => {
 
   const novoFuncionario = async e => {
     e.preventDefault();
-    const dados ={
-      id:id,
+    const dados = {
+      id: id,
       nome: funcionario.nome,
       cpf: funcionario.cpf,
       email: funcionario.email
@@ -309,43 +306,58 @@ export const NovoFuncionario = (props) => {
                   flexDirection: 'column',
                 }}
               >
-                  {funcionarios.length === 0 ? <Alert severity="warning">Nenhum funcionário cadastrado.</Alert> :
-                    <div>
-                      <TableContainer>
-                        <Table aria-label="customized table">
-                          <TableHead>
-                            <TableRow>
-                              <StyledTableCell>Funcionário</StyledTableCell>
-                              <StyledTableCell align="center">CPF</StyledTableCell>
-                              <StyledTableCell align="center">Email</StyledTableCell>
-                              <StyledTableCell align="center">Opções</StyledTableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {funcionarios.map((row) => (
-                              <StyledTableRow key={row._id}>
-                                <StyledTableCell component="th" scope="row">
-                                  {row.nome}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                  {row.cpf}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                  {row.email}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                  <Link to={"/editarFuncionario/" + row._id} style={{ color: 'black', textDecoration: 'none' }}>
-                                    <Button variant="contained" style={{ backgroundColor: '#FFA500' }}>Editar</Button>{' '}
-                                  </Link>
-                                  <Button variant="contained" color="error" onClick={() => deleteFuncionario(row._id)}>Deletar</Button>{' '}
-                                </StyledTableCell>
-                              </StyledTableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </div>
-                  }
+                {funcionarios.length === 0 ? <Alert severity="warning">Nenhum funcionário cadastrado.</Alert> :
+                  <div>
+                    <TableContainer>
+                      <Table aria-label="customized table">
+                        <TableHead>
+                          <TableRow>
+                            <StyledTableCell>Funcionário</StyledTableCell>
+                            <StyledTableCell align="center">CPF</StyledTableCell>
+                            <StyledTableCell align="center">Email</StyledTableCell>
+                            <StyledTableCell align="center">Opções</StyledTableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {funcionarios.map((row) => (
+                            <StyledTableRow key={row._id}>
+                              <StyledTableCell component="th" scope="row">
+                                {row.nome}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {row.cpf}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {row.email}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                <Link to={"/beneficiosFuncionario/" + row._id} style={{ textDecoration: 'none' }}>
+                                  <Fab size="small" color="primary" aria-label="add">
+                                    <LocalHospitalIcon />
+                                  </Fab>{' '}
+                                </Link>
+                                <Link to={"/editarFuncionario/" + row._id} style={{ textDecoration: 'none' }}>
+                                  <Fab size="small" color="primary" style={{ backgroundColor: '#FFA500' }} aria-label="add">
+                                    <EditIcon />
+                                  </Fab>{' '}
+                                </Link>
+                                <Fab
+                                  size="small"
+                                  color="primary"
+                                  style={{ backgroundColor: 'red' }}
+                                  aria-label="add"
+                                  onClick={() => deleteFuncionario(row._id)}
+                                >
+                                  <DeleteForeverIcon />
+                                </Fab>
+                              </StyledTableCell>
+                            </StyledTableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </div>
+                }
               </Paper>
             </Grid>
           </Container>

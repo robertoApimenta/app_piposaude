@@ -165,7 +165,7 @@ export const EditarBeneficio = (props) => {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Pipo Saúde
+              Pipo Saúde - Editar Benefício
             </Typography>
           </Toolbar>
         </AppBar>

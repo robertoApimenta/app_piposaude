@@ -213,7 +213,7 @@ export default function DashboardBeneficios(prop) {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Pipo Saúde
+              Pipo Saúde - Benefícios
             </Typography>
           </Toolbar>
         </AppBar>

@@ -183,7 +183,7 @@ export const EditarFuncionario = (props) => {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Pipo Saúde
+              Editar Funcionário
             </Typography>
           </Toolbar>
         </AppBar>
@@ -281,28 +281,6 @@ export const EditarFuncionario = (props) => {
                 </Paper>
               </Grid>
             </Grid>
-            <h3>Benefícios</h3>
-            <Grid item xs={12} md={12} lg={12}>
-              <Grid container>
-                <Grid item xs={4}>
-                  <TextField
-                    id="outlined-select-currency"
-                    fullWidth
-                    select
-                    label="Selecione o benefício"
-                    value={beneficio}
-                    onChange={handleChange}
-                  >
-                    {beneficios.map((option) => (
-                      <MenuItem key={option._id} value={option.idBeneficio}>
-                        {option.idBeneficio}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-              </Grid>
-            </Grid>
-            { beneficio === 'Plano de Saúde Norte Europa' ? <h1>plano europa</h1> : "" }
           </Container>
         </Box>
       </Box>

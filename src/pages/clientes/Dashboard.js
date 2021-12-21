@@ -26,12 +26,14 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
-import Button from '@mui/material/Button';
-
 import TextField from '@mui/material/TextField';
 
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
+import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import Button from '@mui/material/Button';
 
 import Alert from '@mui/material/Alert';
 
@@ -165,7 +167,6 @@ export default function DashboardClientes(prop) {
     })
   }
 
-
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>
@@ -195,7 +196,7 @@ export default function DashboardClientes(prop) {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Pipo Saúde
+              Pipo Saúde - Clientes
             </Typography>
           </Toolbar>
         </AppBar>
@@ -251,7 +252,7 @@ export default function DashboardClientes(prop) {
                   }}
                 >
                   <Grid container>
-                    <Grid item xs={4}>
+                    <Grid item xs={5}>
                       <TextField
                         variant="outlined"
                         required
@@ -262,7 +263,7 @@ export default function DashboardClientes(prop) {
                         onChange={valorInput}
                       />
                     </Grid>
-                    <Grid item xs={4} style={{ marginLeft: '15px' }}>
+                    <Grid item xs={5} style={{ marginLeft: '15px' }}>
                       <TextField
                         variant="outlined"
                         required
@@ -273,7 +274,7 @@ export default function DashboardClientes(prop) {
                         onChange={valorInput}
                       />
                     </Grid>
-                    <Grid item xs={2} style={{ marginLeft: '15px' }}>
+                    <Grid item xs={1} style={{ marginLeft: '15px' }}>
                       <Fab color="primary" aria-label="add" onClick={newCliente}>
                         <AddIcon />
                       </Fab>
@@ -281,6 +282,7 @@ export default function DashboardClientes(prop) {
                   </Grid>
                 </Paper>
               </Grid>
+              
               <Grid item xs={12} md={12} lg={12}>
                 <Paper
                   sx={{
@@ -309,12 +311,28 @@ export default function DashboardClientes(prop) {
                             </StyledTableCell>
                             <StyledTableCell align="center">
                               <Link to={"/novoFuncionario/" + row._id} style={{ color: 'black', textDecoration: 'none' }}>
-                                <Button variant="contained">Add funcionário</Button>{' '}
+                                <Button variant="contained" startIcon={<AccountCircleIcon />}>
+                                  Funcionários
+                                </Button>{' '}
                               </Link>
                               <Link to={"/editarCliente/" + row._id} style={{ color: 'black', textDecoration: 'none' }}>
-                                <Button variant="contained" style={{ backgroundColor: '#FFA500' }}>Editar</Button>{' '}
+                                <Button
+                                  variant="contained"
+                                  startIcon={<LocalHospitalIcon />}
+                                  style={{backgroundColor: '#FFA500'}}
+                                >
+                                  Benefícios
+                                </Button>{' '}
                               </Link>
-                              <Button variant="contained" color="error" onClick={() => deleteCliente(row._id)}>Deletar</Button>{' '}
+                              <Fab
+                                size="small"
+                                color="primary"
+                                style={{ backgroundColor: 'red' }}
+                                aria-label="add"
+                                onClick={() => deleteCliente(row._id)}
+                              >
+                                <DeleteForeverIcon />
+                              </Fab>
                             </StyledTableCell>
                           </StyledTableRow>
                         ))}

@@ -19,6 +19,8 @@ import {NovoFuncionario} from './pages/clientes/NovoFuncionario';
 
 // import funcionarios
 import {EditarFuncionario} from './pages/funcionarios/EditarFuncionario';
+import {BeneficiosFuncionario} from './pages/funcionarios/BeneficiosFuncionario';
+
 
 
 
@@ -36,6 +38,7 @@ function App() {
           <Route exact path="/novoFuncionario/:id" element={<NovoFuncionario />} />
 
           <Route exact path="/editarFuncionario/:id" element={<EditarFuncionario />} />
+          <Route exact path="/beneficiosFuncionario/:id" element={<BeneficiosFuncionario />} />
 
         </Routes>
       </BrowserRouter>

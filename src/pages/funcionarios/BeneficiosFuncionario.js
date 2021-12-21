@@ -108,64 +108,53 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 
-export const EditarCliente = (props) => {
+export const BeneficiosFuncionario = (props) => {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
-  const [beneficio, setBeneficio] = useState('')
+  
   const [beneficios, setBeneficios] = useState([])
-  const [beneficiosClientes, setBeneficiosClientes] = useState([])
+  const [beneficiosCliente, setBeneficiosCliente] = useState([])
 
+  const [beneficio, setBeneficio] = useState('')
   const handleChange = (event) => {
     setBeneficio(event.target.value);
   };
 
   const { id } = useParams();
+  const [funcionario, setFuncionario] = useState({
+    'idEmpresa': '',
+    'nome': '',
+    'cpf': '',
+    'email': '',
+  })
 
   const [status, setStatus] = useState({
     tipo: '',
     mensagem: ''
   })
 
-  const [razaoSocial, setRazaoSocial] = useState('')
-  const [cnpj, setCnpj] = useState('');
 
   useEffect(() => {
 
-    const getCliente = async () => {
+    const get = async () => {
       await api.get('/listarBeneficiosClientes/' + id).then((res) => {
-        setBeneficiosClientes(res.data);
+        setBeneficiosCliente(res.data);
       })
-      await api.get('/listarBeneficios').then((res) => {
-        setBeneficios(res.data);
-      })
-      await api.get('/listarCliente/' + id).then((res) => {
-        setRazaoSocial(res.data.razaoSocial)
-        setCnpj(res.data.cnpj);
+      await api.get('/listarFuncionario/' + id).then((res) => {
+        setBeneficios(res.data.beneficios)
+        setFuncionario(res.data.funcionario);
       }).catch((erro) => {
         console.log(erro);
       });
     }
-    getCliente();
+    get();
   }, [id]);
 
-  const updateCliente = async e => {
-    e.preventDefault();
-    let data = { razaoSocial, cnpj };
-    await api.put('/editarCliente/' + id, data).then((res) => {
-      setStatus({
-        tipo: 'sucess',
-        mensagem: res.data.mensagem
-      });
-    }).catch(() => {
-      setStatus({
-        tipo: 'erro',
-        mensagem: 'Erro ao editar benefício.'
-      });
-    })
-  };
+  console.log(funcionario)
+  console.log(beneficiosCliente)
 
   const novoBeneficiosClientes = async e => {
     e.preventDefault();
@@ -190,7 +179,6 @@ export const EditarCliente = (props) => {
   }
 
   const deleteBeneficioCliente = async (id) => {
-    console.log(id)
     await api.delete('/deletarBeneficiosClientes/' + id).then(() => {
       setTimeout(function () {
         return window.location.reload();
@@ -229,7 +217,7 @@ export const EditarCliente = (props) => {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Pipo Saúde - {razaoSocial}
+              Benefícios - {funcionario.nome}
             </Typography>
           </Toolbar>
         </AppBar>
@@ -263,6 +251,7 @@ export const EditarCliente = (props) => {
           }}
         >
           <Toolbar />
+
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
               <Grid item xs={12} md={12} lg={12}>
@@ -276,53 +265,6 @@ export const EditarCliente = (props) => {
                     <Alert variant="filled" severity="warning">{status.mensagem}</Alert>
                   </div>
                   : ""}
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 90,
-                  }}
-                >
-                  <Grid container>
-                    <Grid item xs={5}>
-                      <TextField
-                        label="Razão social"
-                        variant="outlined"
-                        required
-                        fullWidth
-                        id="razaoSocial"
-                        name="razaoSocial"
-                        value={razaoSocial}
-                        onChange={e => setRazaoSocial(e.target.value)}
-                      />
-                    </Grid>
-                    <Grid item xs={5} style={{ marginLeft: '15px' }}>
-                      <TextField
-                        label="CNPJ"
-                        variant="outlined"
-                        required
-                        fullWidth
-                        id="cnpj"
-                        name="cnpj"
-                        value={cnpj}
-                        onChange={e => setCnpj(e.target.value)}
-                      />
-                    </Grid>
-                    <Grid item xs={1} style={{ marginLeft: '30px' }}>
-                      <Fab onClick={updateCliente} color="primary" aria-label="add">
-                        <SaveAsIcon />
-                      </Fab>
-                    </Grid>
-                  </Grid>
-                </Paper>
-              </Grid>
-            </Grid>
-          </Container>
-
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={12} lg={12}>
                 <Paper
                   sx={{
                     p: 2,
@@ -343,8 +285,8 @@ export const EditarCliente = (props) => {
                         onChange={handleChange}
                       >
                         {beneficios.map((option) => (
-                          <MenuItem key={option._id} value={option.nome}>
-                            {option.nome}
+                          <MenuItem key={option._id} value={option.idBeneficio}>
+                            {option.idBeneficio}
                           </MenuItem>
                         ))}
                       </TextField>
@@ -380,7 +322,7 @@ export const EditarCliente = (props) => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {beneficiosClientes.map((row) => (
+                        {beneficiosCliente.map((row) => (
                           <StyledTableRow key={row._id}>
                             <StyledTableCell component="th" scope="row">
                               {row.idBeneficio}
