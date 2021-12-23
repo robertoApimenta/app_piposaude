@@ -1,4 +1,6 @@
 import * as React from 'react';
+import Logo from '../../src/img/logo2.png'
+
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
@@ -141,10 +143,10 @@ export default function Dashboard() {
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 240,
+                    height: 510,
                   }}
                 >
-                    <h1>Toma</h1>
+                  <img src={Logo}/>
                 </Paper>
               </Grid>            
             </Grid>

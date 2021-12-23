@@ -23,7 +23,6 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 
 import Fab from '@mui/material/Fab';
-import SaveAsIcon from '@mui/icons-material/SaveAs';
 import AddIcon from '@mui/icons-material/Add';
 
 
@@ -115,8 +114,9 @@ export const BeneficiosFuncionario = (props) => {
   };
 
   
-  const [beneficios, setBeneficios] = useState([])
-  const [beneficiosCliente, setBeneficiosCliente] = useState([])
+  const [beneficios, setBeneficios] = useState([]);
+  const [beneficiosCliente, setBeneficiosCliente] = useState([]);
+  const [beneficiosFuncionario, setBeneficiosFuncionario] = useState([]);
 
   const [beneficio, setBeneficio] = useState('')
   const handleChange = (event) => {
@@ -140,8 +140,8 @@ export const BeneficiosFuncionario = (props) => {
   useEffect(() => {
 
     const get = async () => {
-      await api.get('/listarBeneficiosClientes/' + id).then((res) => {
-        setBeneficiosCliente(res.data);
+      await api.get('/listarBeneficiosFuncionario/' + id).then((res) => {
+        setBeneficiosFuncionario(res.data);
       })
       await api.get('/listarFuncionario/' + id).then((res) => {
         setBeneficios(res.data.beneficios)
@@ -156,13 +156,13 @@ export const BeneficiosFuncionario = (props) => {
   console.log(funcionario)
   console.log(beneficiosCliente)
 
-  const novoBeneficiosClientes = async e => {
+  const novoBeneficioFuncionario = async e => {
     e.preventDefault();
     var dados = {
-      idCliente: id,
+      idFuncionario: id,
       idBeneficio: beneficio
     }
-    await api.post('/novoBeneficiosClientes', dados).then((res) => {
+    await api.post('/novoBeneficioFuncionario', dados).then((res) => {
       setStatus({
         tipo: 'sucess',
         mensagem: 'Benefício adicionado com sucesso.'
@@ -178,8 +178,8 @@ export const BeneficiosFuncionario = (props) => {
     });
   }
 
-  const deleteBeneficioCliente = async (id) => {
-    await api.delete('/deletarBeneficiosClientes/' + id).then(() => {
+  const deleteBeneficioFuncionario = async (id) => {
+    await api.delete('/deletarBeneficioFuncionario/' + id).then(() => {
       setTimeout(function () {
         return window.location.reload();
       }, 300);
@@ -292,7 +292,7 @@ export const BeneficiosFuncionario = (props) => {
                       </TextField>
                     </Grid>
                     <Grid item xs={1} style={{ marginLeft: '30px' }}>
-                      <Fab onClick={novoBeneficiosClientes} color="primary" aria-label="add">
+                      <Fab onClick={novoBeneficioFuncionario} color="primary" aria-label="add">
                         <AddIcon />
                       </Fab>
                     </Grid>
@@ -322,13 +322,13 @@ export const BeneficiosFuncionario = (props) => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {beneficiosCliente.map((row) => (
+                        {beneficiosFuncionario.map((row) => (
                           <StyledTableRow key={row._id}>
                             <StyledTableCell component="th" scope="row">
                               {row.idBeneficio}
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              <Button variant="contained" color="error" onClick={() => deleteBeneficioCliente(row._id)}>Remover</Button>{' '}
+                              <Button variant="contained" color="error" onClick={() => deleteBeneficioFuncionario(row._id)}>Remover</Button>{' '}
                             </StyledTableCell>
                           </StyledTableRow>
                         ))}
