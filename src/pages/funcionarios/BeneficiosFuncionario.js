@@ -22,10 +22,6 @@ import { mainListItems } from '../listItems';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 
-import Fab from '@mui/material/Fab';
-import AddIcon from '@mui/icons-material/Add';
-
-
 import Alert from '@mui/material/Alert';
 
 import Table from '@mui/material/Table';
@@ -113,9 +109,8 @@ export const BeneficiosFuncionario = (props) => {
     setOpen(!open);
   };
 
-  
+
   const [beneficios, setBeneficios] = useState([]);
-  const [beneficiosCliente, setBeneficiosCliente] = useState([]);
   const [beneficiosFuncionario, setBeneficiosFuncionario] = useState([]);
 
   const [beneficio, setBeneficio] = useState('')
@@ -129,13 +124,22 @@ export const BeneficiosFuncionario = (props) => {
     'nome': '',
     'cpf': '',
     'email': '',
-  })
+  });
 
   const [status, setStatus] = useState({
     tipo: '',
     mensagem: ''
-  })
+  });
 
+  const [dadosForm, setDadosForm] = useState({
+    dataAdmissao: '',
+    endereco: '',
+    peso: '',
+    altura: '',
+    horas: ''
+  });
+
+  const valorInput = e => setDadosForm({ ...dadosForm, [e.target.name]: e.target.value });
 
   useEffect(() => {
 
@@ -154,13 +158,19 @@ export const BeneficiosFuncionario = (props) => {
   }, [id]);
 
   console.log(funcionario)
-  console.log(beneficiosCliente)
+  console.log(dadosForm.dataAdmissao)
+
 
   const novoBeneficioFuncionario = async e => {
     e.preventDefault();
     var dados = {
       idFuncionario: id,
-      idBeneficio: beneficio
+      idBeneficio: beneficio,
+      dataAdmissao: dadosForm.dataAdmissao,
+      endereco: dadosForm.endereco,
+      peso: dadosForm.peso,
+      altura: dadosForm.altura,
+      horas: dadosForm.horas
     }
     await api.post('/novoBeneficioFuncionario', dados).then((res) => {
       setStatus({
@@ -291,16 +301,243 @@ export const BeneficiosFuncionario = (props) => {
                         ))}
                       </TextField>
                     </Grid>
-                    <Grid item xs={1} style={{ marginLeft: '30px' }}>
-                      <Fab onClick={novoBeneficioFuncionario} color="primary" aria-label="add">
-                        <AddIcon />
-                      </Fab>
-                    </Grid>
                   </Grid>
                 </Paper>
               </Grid>
             </Grid>
           </Container>
+
+          {beneficio === 'Plano de Saúde Norte Europa' ?
+            <div>
+              <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={12} lg={12}>
+                    <Paper
+                      sx={{
+                        p: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: 260,
+                      }}
+                    >
+                      <h4>Plano de Saúde Norte Europa</h4>
+                      <TableContainer component={Paper}>
+                        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Nome completo</TableCell>
+                              <TableCell align="center">CPF</TableCell>
+                              <TableCell align="center">Data de Admissão</TableCell>
+                              <TableCell align="center">Email</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            <TableRow>
+                              <TableCell>{funcionario.nome}</TableCell>
+                              <TableCell align="center">{funcionario.cpf}</TableCell>
+                              <TableCell align="center">
+                                <TextField
+                                  type="date"
+                                  variant="outlined"
+                                  required
+                                  fullWidth
+                                  id="dataAdmissao"
+                                  name="dataAdmissao"
+                                  onChange={valorInput}
+                                />
+                              </TableCell>
+                              <TableCell align="center">{funcionario.email}</TableCell>
+                            </TableRow>
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                      <Grid sx={{ mt: 2 }}>
+                        <Button variant="contained" onClick={novoBeneficioFuncionario}>Adicionar Plano</Button>
+                      </Grid>
+                    </Paper>
+
+                  </Grid>
+                </Grid>
+              </Container>
+            </div>
+            : ''}
+
+          {beneficio === 'Plano de Saúde Pampulha Intermédica' ?
+            <div>
+              <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={12} lg={12}>
+                    <Paper
+                      sx={{
+                        p: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: 260,
+                      }}
+                    >
+                      <h4>Plano de Saúde Pampulha Intermédica</h4>
+                      <TableContainer component={Paper}>
+                        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Nome completo</TableCell>
+                              <TableCell align="center">CPF</TableCell>
+                              <TableCell align="center">Data de Admissão</TableCell>
+                              <TableCell align="center">Endereço</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            <TableRow>
+                              <TableCell>{funcionario.nome}</TableCell>
+                              <TableCell align="center">{funcionario.cpf}</TableCell>
+                              <TableCell align="center">
+                                <TextField
+                                  type="date"
+                                  variant="outlined"
+                                  required
+                                  fullWidth
+                                  id="dataAdmissao"
+                                  name="dataAdmissao"
+                                  onChange={valorInput}
+                                />
+                              </TableCell>
+                              <TableCell align="center">
+                                <TextField
+                                  variant="outlined"
+                                  required
+                                  fullWidth
+                                  id="endereco"
+                                  name="endereco"
+                                  onChange={valorInput}
+                                />
+                              </TableCell>
+                            </TableRow>
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                      <Grid sx={{ mt: 2 }}>
+                        <Button variant="contained" onClick={novoBeneficioFuncionario}>Adicionar Plano</Button>
+                      </Grid>
+                    </Paper>
+
+                  </Grid>
+                </Grid>
+              </Container>
+            </div>
+            : ''}
+
+          {beneficio === 'Plano Dental Sorriso' ?
+            <div>
+              <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={12} lg={12}>
+                    <Paper
+                      sx={{
+                        p: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: 260,
+                      }}
+                    >
+                      <h4>Plano Dental Sorriso</h4>
+                      <TableContainer component={Paper}>
+                        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Nome completo</TableCell>
+                              <TableCell align="center">CPF</TableCell>
+                              <TableCell align="center">Peso (Kg)</TableCell>
+                              <TableCell align="center">Altura (cm)</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            <TableRow>
+                              <TableCell>{funcionario.nome}</TableCell>
+                              <TableCell align="center">{funcionario.cpf}</TableCell>
+                              <TableCell align="center">
+                                <TextField
+                                  variant="outlined"
+                                  required
+                                  fullWidth
+                                  id="peso"
+                                  name="peso"
+                                  onChange={valorInput}
+                                />
+                              </TableCell>
+                              <TableCell align="center">
+                                <TextField
+                                  variant="outlined"
+                                  required
+                                  fullWidth
+                                  id="altura"
+                                  name="altura"
+                                  onChange={valorInput}
+                                />
+                              </TableCell>
+                            </TableRow>
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                      <Grid sx={{ mt: 2 }}>
+                        <Button variant="contained" onClick={novoBeneficioFuncionario}>Adicionar Plano</Button>
+                      </Grid>
+                    </Paper>
+
+                  </Grid>
+                </Grid>
+              </Container>
+            </div>
+            : ''}
+
+          {beneficio === 'Plano de Saúde Mental Mente Sã, Corpo São' ?
+            <div>
+              <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={12} lg={12}>
+                    <Paper
+                      sx={{
+                        p: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: 260,
+                      }}
+                    >
+                      <h4>Plano de Saúde Mental Mente Sã, Corpo São</h4>
+                      <TableContainer component={Paper}>
+                        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell align="center">CPF</TableCell>
+                              <TableCell align="center">Horas meditadas nos últimos 7 dias</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            <TableRow>
+                              <TableCell align="center">{funcionario.cpf}</TableCell>
+                              <TableCell align="center">
+                                <TextField
+                                  variant="outlined"
+                                  required
+                                  fullWidth
+                                  id="horas"
+                                  name="horas"
+                                  onChange={valorInput}
+                                />
+                              </TableCell>
+                            </TableRow>
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                      <Grid sx={{ mt: 2 }}>
+                        <Button variant="contained" onClick={novoBeneficioFuncionario}>Adicionar Plano</Button>
+                      </Grid>
+                    </Paper>
+
+                  </Grid>
+                </Grid>
+              </Container>
+            </div>
+            : ''}
 
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
